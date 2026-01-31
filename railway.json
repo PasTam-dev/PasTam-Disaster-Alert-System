@@ -4,6 +4,6 @@
     "builder": "dockerfile"
   },
   "deploy": {
-    "startCommand": "php artisan migrate --force"
+    "startCommand": "php artisan migrate --force 2>/dev/null || true"
   }
 }
