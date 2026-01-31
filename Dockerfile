@@ -25,6 +25,6 @@ RUN npm install && npm run build || true
 RUN mkdir -p /var/www/html/bootstrap/cache && \
     chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Run Laravel's built-in server on the port provided by Railway
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+# Run migrations then start Laravel's built-in server on the port provided by Railway
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
 EXPOSE 8000
