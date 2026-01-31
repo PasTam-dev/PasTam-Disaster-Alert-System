@@ -1,34 +1,30 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Install system dependencies
+# Install system dependencies (PHP ext deps + Node for Vite build)
 RUN apt-get update && apt-get install -y \
     zlib1g-dev libjpeg-dev libpng-dev libfreetype6-dev libwebp-dev \
     zip unzip git curl nodejs npm && rm -rf /var/lib/apt/lists/*
 
-# Enable extensions and Apache modules
+# Enable required PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
-    docker-php-ext-install pdo pdo_mysql gd && \
-    a2enmod rewrite
+    docker-php-ext-install pdo pdo_mysql gd
 
 WORKDIR /var/www/html
 
-# Copy everything
+# Copy application source
 COPY . /var/www/html
 
-# Fix Apache document root
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-
-# Install Composer and dependencies
+# Install Composer and PHP dependencies (skip artisan scripts during build)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer install --no-dev --optimize-autoloader --no-scripts 2>&1 || true
 
-# Build frontend
+# Build frontend assets
 RUN npm install && npm run build || true
 
-# Fix permissions
+# Fix permissions for Laravel
 RUN mkdir -p /var/www/html/bootstrap/cache && \
-    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
     chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-CMD ["apache2-foreground"]
-EXPOSE 80
+# Run Laravel's built-in server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+EXPOSE 8000
