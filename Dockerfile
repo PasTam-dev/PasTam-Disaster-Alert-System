@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     git \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable required extensions
@@ -32,7 +33,7 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-enabled/0
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Install Node dependencies and build frontend
 RUN apt-get update && apt-get install -y nodejs npm
