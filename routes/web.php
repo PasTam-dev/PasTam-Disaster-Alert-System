@@ -22,6 +22,7 @@ use App\Http\Controllers\ReportController;
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/evacuation-map', [LandingController::class, 'map'])->name('map');
 Route::get('/emergency-contacts', [LandingController::class, 'emergency'])->name('emergency');
+Route::get('/emergency', [LandingController::class, 'emergency']);
 
 // Authentication
 Route::get('login', [AuthController::class, 'login'])->name('login');
