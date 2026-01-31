@@ -26,6 +26,9 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . /var/www/html
 
+# Verify bootstrap/app.php exists
+RUN test -f /var/www/html/bootstrap/app.php || (echo "Missing bootstrap/app.php" && exit 1)
+
 # Set Apache document root
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-enabled/000-default.conf
 
