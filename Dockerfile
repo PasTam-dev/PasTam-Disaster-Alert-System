@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libfreetype6-dev \
     libwebp-dev \
+    zip \
+    unzip \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable required extensions
