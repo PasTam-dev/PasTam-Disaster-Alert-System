@@ -81,10 +81,10 @@
                     </a>
                     
                     <!-- Emergency Lists -->
-                    <a href="{{route('emergency')}}" class="nav-item px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-lg font-medium">
+                    <a href="{{ route('emergency') }}" class="nav-item px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-lg font-medium">
                         <i class="fas fa-phone-alt mr-2"></i>Emergency Lists
                     </a>
-                   <a href="/emergency" class="nav-item px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-lg font-medium">
+                    <a href="{{ route('login') }}" class="nav-item px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-lg font-medium">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </a>
                 </div>
@@ -107,7 +107,7 @@
                     <a href="/evacuation" class="block px-4 py-3 text-gray-700 hover:bg-green-50 rounded-lg font-medium">
                         <i class="fas fa-map-marker-alt mr-3"></i>Evacuation Area
                     </a>
-                    <a href="/emergency" class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-lg font-medium">
+                    <a href="{{ route('emergency') }}" class="block px-4 py-3 text-gray-700 hover:bg-orange-50 rounded-lg font-medium">
                         <i class="fas fa-phone-alt mr-3"></i>Emergency Lists
                     </a>
                 </div>
