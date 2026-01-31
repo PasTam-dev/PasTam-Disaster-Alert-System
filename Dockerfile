@@ -1,6 +1,16 @@
 FROM php:8.2-apache
 
+# Install system dependencies for GD and other extensions
+RUN apt-get update && apt-get install -y \
+    zlib1g-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libwebp-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Enable required extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
 RUN docker-php-ext-install pdo pdo_mysql gd
 
 # Enable Apache rewrite module
