@@ -8,8 +8,7 @@ RUN apt-get update && apt-get install -y \
 # Enable extensions and Apache modules
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp && \
     docker-php-ext-install pdo pdo_mysql gd && \
-    rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_worker.load && \
-    a2enmod mpm_prefork rewrite
+    a2enmod rewrite
 
 WORKDIR /var/www/html
 
