@@ -37,7 +37,6 @@ COPY package.json /var/www/html/
 COPY package-lock.json /var/www/html/
 COPY vite.config.js /var/www/html/
 COPY tailwind.config.js /var/www/html/
-COPY .env.example /var/www/html/.env.example 2>/dev/null || true
 
 # Fix Apache document root to point to public folder
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
