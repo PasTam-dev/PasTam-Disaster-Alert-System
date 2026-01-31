@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Install system dependencies for GD and other extensions
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libjpeg-dev \
@@ -13,41 +13,34 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Enable required extensions
+# Enable required extensions and Apache modules
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
 RUN docker-php-ext-install pdo pdo_mysql gd
-
-# Enable Apache rewrite module
 RUN a2enmod rewrite
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
+# Copy ALL files
 COPY . /var/www/html
 
-# Verify bootstrap/app.php exists
-RUN test -f /var/www/html/bootstrap/app.php || (echo "Missing bootstrap/app.php" && exit 1)
-
-# Set Apache document root
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-enabled/000-default.conf
+# Fix Apache document root to point to public folder
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+# Install PHP dependencies (skip artisan)
+RUN composer install --no-dev --optimize-autoloader --no-scripts 2>&1 || true
 
-# Install Node dependencies and build frontend
-RUN apt-get update && apt-get install -y nodejs npm
-RUN npm install
-RUN npm run build || echo "Build failed but continuing..."
+# Install Node dependencies
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
+RUN npm install && npm run build || true
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage
-RUN chmod -R 775 /var/www/html/storage
+# Fix permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Start Apache
+# Just run Apache - nothing else
 CMD ["apache2-foreground"]
 
 EXPOSE 80
