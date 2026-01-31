@@ -29,7 +29,6 @@ COPY public/ /var/www/html/public/
 COPY resources/ /var/www/html/resources/
 COPY routes/ /var/www/html/routes/
 COPY storage/ /var/www/html/storage/
-COPY vendor/ /var/www/html/vendor/ 2>/dev/null || true
 COPY artisan /var/www/html/
 COPY composer.json /var/www/html/
 COPY composer.lock /var/www/html/
