@@ -924,8 +924,8 @@
                     formData.append(`photos[${index}]`, photo);
                 });
                 
-                // Submit via AJAX
-                const response = await fetch('{{ route("reports.store") }}', {
+                // Submit via AJAX (use relative URL to avoid mixed-content issues on HTTPS)
+                const response = await fetch('{{ route("reports.store", [], false) }}', {
                     method: 'POST',
                     body: formData,
                     headers: {
