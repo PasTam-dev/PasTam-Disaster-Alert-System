@@ -40,11 +40,28 @@
         .legend-item {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 8px 12px;
             background: white;
             border-radius: 6px;
             margin-bottom: 5px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+        }
+        .legend-item:hover {
+            background: #F9FAFB;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            transform: translateY(-1px);
+        }
+        .legend-item.inactive {
+            opacity: 0.6;
+            background: #F3F4F6;
+        }
+        .legend-status {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 9999px;
         }
         .capacity-indicator {
             height: 8px;
@@ -93,6 +110,12 @@
         }
         .fullscreen-btn:hover {
             background: #f4f4f4;
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 420px;
+            }
         }
     </style>
 
@@ -192,41 +215,94 @@
                 <!-- Map Legend -->
                 <div class="p-4 border-t">
                     <h3 class="font-semibold text-gray-800 mb-3">Map Legend</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-                        <div class="legend-item">
-                            <i class="fas fa-school text-blue-600 text-xl mr-3"></i>
-                            <div>
-                                <span class="font-medium">Schools</span>
-                                <p class="text-xs text-gray-500">Evacuation Centers</p>
+                    <p class="text-xs text-gray-500 mb-2">Tap a legend item to toggle its layer on the map.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="legend-item legend-toggle" data-layer="schools">
+                            <div class="flex items-center">
+                                <i class="fas fa-school text-blue-600 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Schools</span>
+                                    <p class="text-xs text-gray-500">School-based facilities</p>
+                                </div>
                             </div>
+                            <span class="legend-status bg-blue-100 text-blue-700 text-[10px] uppercase tracking-wide">On</span>
                         </div>
-                        <div class="legend-item">
-                            <i class="fas fa-building text-green-600 text-xl mr-3"></i>
-                            <div>
-                                <span class="font-medium">Government</span>
-                                <p class="text-xs text-gray-500">Barangay Halls</p>
+
+                        <div class="legend-item legend-toggle" data-layer="evacCenters">
+                            <div class="flex items-center">
+                                <i class="fas fa-house-user text-purple-600 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Evacuation Centers</span>
+                                    <p class="text-xs text-gray-500">Designated safe shelters</p>
+                                </div>
                             </div>
+                            <span class="legend-status bg-purple-100 text-purple-700 text-[10px] uppercase tracking-wide">On</span>
                         </div>
-                        <div class="legend-item">
-                            <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
-                            <div>
-                                <span class="font-medium">High Risk</span>
-                                <p class="text-xs text-gray-500">Flood Zones</p>
+
+                        <div class="legend-item legend-toggle" data-layer="government">
+                            <div class="flex items-center">
+                                <i class="fas fa-landmark text-emerald-600 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Government</span>
+                                    <p class="text-xs text-gray-500">Health & offices</p>
+                                </div>
                             </div>
+                            <span class="legend-status bg-emerald-100 text-emerald-700 text-[10px] uppercase tracking-wide">On</span>
                         </div>
-                        <div class="legend-item">
-                            <i class="fas fa-shield-alt text-green-500 text-xl mr-3"></i>
-                            <div>
-                                <span class="font-medium">Safe Areas</span>
-                                <p class="text-xs text-gray-500">Elevated Zones</p>
+
+                        <div class="legend-item legend-toggle" data-layer="barangayHalls">
+                            <div class="flex items-center">
+                                <i class="fas fa-building text-green-600 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Barangay Halls</span>
+                                    <p class="text-xs text-gray-500">Barangay operations</p>
+                                </div>
                             </div>
+                            <span class="legend-status bg-green-100 text-green-700 text-[10px] uppercase tracking-wide">On</span>
                         </div>
-                        <div class="legend-item">
-                            <i class="fas fa-user text-blue-500 text-xl mr-3"></i>
-                            <div>
-                                <span class="font-medium">Your Location</span>
-                                <p class="text-xs text-gray-500">When enabled</p>
+
+                        <div class="legend-item legend-toggle" data-layer="flood">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">High Risk Flood Zones</span>
+                                    <p class="text-xs text-gray-500">Red/orange overlays</p>
+                                </div>
                             </div>
+                            <span class="legend-status bg-red-100 text-red-700 text-[10px] uppercase tracking-wide">On</span>
+                        </div>
+
+                        <div class="legend-item legend-toggle" data-layer="safe">
+                            <div class="flex items-center">
+                                <i class="fas fa-shield-alt text-green-500 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Safe Areas</span>
+                                    <p class="text-xs text-gray-500">Green safe overlays</p>
+                                </div>
+                            </div>
+                            <span class="legend-status bg-green-100 text-green-700 text-[10px] uppercase tracking-wide">On</span>
+                        </div>
+
+                        <div class="legend-item legend-toggle" data-layer="elevated">
+                            <div class="flex items-center">
+                                <i class="fas fa-mountain text-sky-500 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Elevated Zones</span>
+                                    <p class="text-xs text-gray-500">Higher ground areas</p>
+                                </div>
+                            </div>
+                            <span class="legend-status bg-sky-100 text-sky-700 text-[10px] uppercase tracking-wide">On</span>
+                        </div>
+
+                        <div class="legend-item legend-toggle" data-layer="user">
+                            <div class="flex items-center">
+                                <i class="fas fa-user text-blue-500 text-xl mr-3"></i>
+                                <div>
+                                    <span class="font-medium">Your Location</span>
+                                    <p class="text-xs text-gray-500">Blue dot & route</p>
+                                </div>
+                            </div>
+                            <span class="legend-status bg-blue-100 text-blue-700 text-[10px] uppercase tracking-wide">On</span>
                         </div>
                     </div>
                 </div>
@@ -277,11 +353,11 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <button onclick="focusOnLocation(14.6666, 121.0333, 'Pasong Tamo Elementary School')" 
+                        <button onclick="focusOnLocation(14.67398, 121.04673, 'Pasong Tamo Elementary School')" 
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
-                        <button onclick="showDirections(14.6666, 121.0333, 'Pasong Tamo Elementary School')" 
+                        <button onclick="showDirections(14.67398, 121.04673, 'Pasong Tamo Elementary School')" 
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -327,11 +403,11 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <button onclick="focusOnLocation(14.6650, 121.0320, 'Barangay Hall')" 
+                        <button onclick="focusOnLocation(14.67475, 121.04812, 'Barangay Hall')" 
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
-                        <button onclick="showDirections(14.6650, 121.0320, 'Barangay Hall')" 
+                        <button onclick="showDirections(14.67475, 121.04812, 'Barangay Hall')" 
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -377,11 +453,11 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <button onclick="focusOnLocation(14.6680, 121.0350, 'Community Center')" 
+                        <button onclick="focusOnLocation(14.67610, 121.04980, 'Community Center')" 
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
-                        <button onclick="showDirections(14.6680, 121.0350, 'Community Center')" 
+                        <button onclick="showDirections(14.67610, 121.04980, 'Community Center')" 
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -474,47 +550,67 @@
 
     <script>
         let map;
-        let floodLayer, safeLayer, evacuationLayer;
+        let floodLayer, safeLayer;
+        let elevatedLayer, barangayCoverageLayer;
         let currentLayer = 'satellite';
         let satelliteTiles, streetTiles, terrainTiles;
         let userLocation = null;
         let userMarker = null;
+        let userLayer = null;
         let routeLayer = null;
+        let centerMarkers = [];
+
+        const layerStates = {
+            schools: true,
+            evacCenters: true,
+            government: true,
+            barangayHalls: true,
+            flood: true,
+            safe: true,
+            elevated: true,
+            user: true
+        };
         
         // Evacuation centers data
         const evacuationCenters = [
             { 
                 name: "Pasong Tamo Elementary School", 
-                lat: 14.6666, 
-                lng: 121.0333, 
+                lat: 14.67398, 
+                lng: 121.04673, 
                 capacity: 500, 
                 current: 300, 
                 type: "school", 
                 color: "blue",
                 facilities: ["Food", "Water", "Beds", "Medical"],
-                contact: "(02) 111-1111"
+                contact: "(02) 111-1111",
+                // Appears as both a school and a primary evacuation center
+                categories: ["schools", "evacCenters"]
             },
             { 
                 name: "Barangay Hall", 
-                lat: 14.6650, 
-                lng: 121.0320, 
+                lat: 14.67475, 
+                lng: 121.04812, 
                 capacity: 200, 
                 current: 80, 
                 type: "government", 
                 color: "green",
                 facilities: ["Emergency Comms", "Medical", "Coordination"],
-                contact: "(02) 123-4567"
+                contact: "(02) 123-4567",
+                // Core government evacuation facility and barangay hall
+                categories: ["evacCenters", "government", "barangayHalls"]
             },
             { 
                 name: "Community Center", 
-                lat: 14.6680, 
-                lng: 121.0350, 
+                lat: 14.67610, 
+                lng: 121.04980, 
                 capacity: 300, 
                 current: 90, 
                 type: "community", 
                 color: "purple",
                 facilities: ["Family Space", "Accessible", "Children Area"],
-                contact: "(02) 222-2222"
+                contact: "(02) 222-2222",
+                // Multi-purpose community evacuation site
+                categories: ["evacCenters"]
             },
             { 
                 name: "Health Center", 
@@ -525,7 +621,9 @@
                 type: "health", 
                 color: "red",
                 facilities: ["Medical Staff", "Medicine", "Emergency Care"],
-                contact: "(02) 333-3333"
+                contact: "(02) 333-3333",
+                // Government-run health facility
+                categories: ["government"]
             },
             { 
                 name: "Gymnasium", 
@@ -536,7 +634,9 @@
                 type: "sports", 
                 color: "orange",
                 facilities: ["Large Space", "Parking", "Basic Amenities"],
-                contact: "(02) 444-4444"
+                contact: "(02) 444-4444",
+                // Large-capacity secondary evacuation facility
+                categories: ["evacCenters"]
             }
         ];
 
@@ -555,8 +655,8 @@
         });
 
         function initializeMap() {
-            // Pasong Tamo coordinates
-            const pasongTamo = [14.6666, 121.0333];
+            // Barangay Pasong Tamo center coordinates (Quezon City)
+            const pasongTamo = [14.682138, 121.059137];
             
             // Initialize map with basic controls
             map = L.map('map').setView(pasongTamo, 15);
@@ -583,14 +683,16 @@
             // Create layers
             createEvacuationCenters();
             createHazardZones();
+            createElevatedZones();
+            createBarangayCoverage();
             
             // Add simple fullscreen functionality
             setupFullscreen();
         }
         
         function createEvacuationCenters() {
-            evacuationLayer = L.layerGroup();
-            
+            centerMarkers = [];
+
             evacuationCenters.forEach(center => {
                 // Create custom icon based on type
                 let iconHtml, iconColor;
@@ -628,49 +730,141 @@
                 const percentage = Math.round((center.current / center.capacity) * 100);
                 const capacityColor = percentage > 80 ? '#EF4444' : percentage > 50 ? '#F59E0B' : '#10B981';
                 
+                const popupHtml = createCenterPopup(center, iconColor, percentage, capacityColor);
+
                 const marker = L.marker([center.lat, center.lng], { icon: icon })
-                    .bindPopup(`
-                        <div class="custom-popup" style="min-width: 280px;">
-                            <h3 class="font-bold text-lg mb-2" style="color: ${iconColor}">${center.name}</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Capacity:</span>
-                                    <span class="font-bold">${center.capacity} people</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Currently:</span>
-                                    <span class="font-bold">${center.current} (${percentage}%)</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-                                    <div class="h-2 rounded-full" style="width: ${percentage}%; background-color: ${capacityColor};"></div>
-                                </div>
-                                <div class="mt-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-1">Facilities:</p>
-                                    <div class="flex flex-wrap gap-1">
-                                        ${center.facilities.map(f => `<span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">${f}</span>`).join('')}
-                                    </div>
-                                </div>
-                                <div class="mt-2">
-                                    <p class="text-sm font-medium text-gray-700">Contact: ${center.contact}</p>
-                                </div>
-                                <div class="flex gap-2 mt-3">
-                                    <button onclick="focusOnLocation(${center.lat}, ${center.lng}, '${center.name.replace(/'/g, "\\'")}')" 
-                                            class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition">
-                                        <i class="fas fa-search mr-1"></i> Zoom
-                                    </button>
-                                    <button onclick="showDirections(${center.lat}, ${center.lng}, '${center.name.replace(/'/g, "\\'")}')" 
-                                            class="text-sm bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition">
-                                        <i class="fas fa-directions mr-1"></i> Directions
-                                    </button>
-                                </div>
+                    .bindPopup(popupHtml);
+
+                centerMarkers.push({
+                    marker,
+                    categories: center.categories || ['evacCenters']
+                });
+            });
+
+            updateCenterMarkersVisibility();
+        }
+
+        function createCenterPopup(center, iconColor, percentage, capacityColor) {
+            // Primary evacuation centers with specific required content
+            if (center.name === "Pasong Tamo Elementary School") {
+                return `
+                    <div class="custom-popup" style="min-width: 280px;">
+                        <h3 class="font-bold text-lg mb-1" style="color: ${iconColor}">Pasong Tamo Elementary School</h3>
+                        <p class="text-sm text-gray-600 mb-3">Main Evacuation Center</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Capacity:</span>
+                                <span class="font-bold">500 people</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Currently:</span>
+                                <span class="font-bold">300 (60% full)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="h-2 rounded-full" style="width: 60%; background-color: ${capacityColor};"></div>
+                            </div>
+                            <ul class="mt-3 text-sm text-gray-700 space-y-1">
+                                <li>Food supplies available</li>
+                                <li>Sleeping facilities</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (center.name === "Barangay Hall") {
+                return `
+                    <div class="custom-popup" style="min-width: 280px;">
+                        <h3 class="font-bold text-lg mb-1" style="color: ${iconColor}">Barangay Hall</h3>
+                        <p class="text-sm text-gray-600 mb-3">Emergency Operations Center</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Capacity:</span>
+                                <span class="font-bold">200 people</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Currently:</span>
+                                <span class="font-bold">80 (40% full)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="h-2 rounded-full" style="width: 40%; background-color: ${capacityColor};"></div>
+                            </div>
+                            <ul class="mt-3 text-sm text-gray-700 space-y-1">
+                                <li>Emergency communications</li>
+                                <li>Medical station</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (center.name === "Community Center") {
+                return `
+                    <div class="custom-popup" style="min-width: 280px;">
+                        <h3 class="font-bold text-lg mb-1" style="color: ${iconColor}">Community Center</h3>
+                        <p class="text-sm text-gray-600 mb-3">Multi-purpose Facility</p>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Capacity:</span>
+                                <span class="font-bold">300 people</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Currently:</span>
+                                <span class="font-bold">90 (30% full)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="h-2 rounded-full" style="width: 30%; background-color: ${capacityColor};"></div>
+                            </div>
+                            <ul class="mt-3 text-sm text-gray-700 space-y-1">
+                                <li>Family-friendly space</li>
+                                <li>Accessible facility</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Fallback generic popup for other facilities
+            return `
+                <div class="custom-popup" style="min-width: 280px;">
+                    <h3 class="font-bold text-lg mb-2" style="color: ${iconColor}">${center.name}</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Capacity:</span>
+                            <span class="font-bold">${center.capacity} people</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Currently:</span>
+                            <span class="font-bold">${center.current} (${percentage}%)</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div class="h-2 rounded-full" style="width: ${percentage}%; background-color: ${capacityColor};"></div>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm font-medium text-gray-700 mb-1">Facilities:</p>
+                            <div class="flex flex-wrap gap-1">
+                                ${center.facilities.map(f => `<span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">${f}</span>`).join('')}
                             </div>
                         </div>
-                    `);
-                    
-                evacuationLayer.addLayer(marker);
+                        <div class="mt-2">
+                            <p class="text-sm font-medium text-gray-700">Contact: ${center.contact}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateCenterMarkersVisibility() {
+            centerMarkers.forEach(entry => {
+                const shouldBeVisible = entry.categories.some(cat => layerStates[cat]);
+                const isOnMap = map.hasLayer(entry.marker);
+
+                if (shouldBeVisible && !isOnMap) {
+                    entry.marker.addTo(map);
+                } else if (!shouldBeVisible && isOnMap) {
+                    map.removeLayer(entry.marker);
+                }
             });
-            
-            evacuationLayer.addTo(map);
         }
         
         function createHazardZones() {
@@ -716,7 +910,7 @@
             floodLayer = L.layerGroup([floodZone1, floodZone2]).addTo(map);
             
             // Safe zones
-            const safeZone1 = L.circle([14.6666, 121.0333], {
+            const safeZone1 = L.circle([14.67398, 121.04673], {
                 color: '#10B981',
                 fillColor: '#34D399',
                 fillOpacity: 0.2,
@@ -730,7 +924,7 @@
                 </div>
             `);
             
-            const safeZone2 = L.circle([14.6680, 121.0350], {
+            const safeZone2 = L.circle([14.67610, 121.04980], {
                 color: '#10B981',
                 fillColor: '#34D399',
                 fillOpacity: 0.2,
@@ -746,6 +940,48 @@
             
             safeLayer = L.layerGroup([safeZone1, safeZone2]).addTo(map);
         }
+
+        function createElevatedZones() {
+            // Elevated / high-ground areas (separate from general safe zones)
+            const elevated1 = L.polygon([
+                [14.6675, 121.0315],
+                [14.6675, 121.0330],
+                [14.6665, 121.0330],
+                [14.6665, 121.0315]
+            ], {
+                color: '#0EA5E9',
+                fillColor: '#38BDF8',
+                fillOpacity: 0.18,
+                weight: 2,
+                dashArray: '4, 4'
+            }).bindPopup(`
+                <div class="custom-popup">
+                    <h3 class="font-bold text-sky-600">Elevated Zone</h3>
+                    <p class="text-sm mt-2">Area with relatively higher elevation, less prone to flooding.</p>
+                </div>
+            `);
+
+            elevatedLayer = L.layerGroup([elevated1]).addTo(map);
+        }
+
+        function createBarangayCoverage() {
+            // Approximate barangay coverage for Barangay Pasong Tamo, Quezon City
+            const coverageCircle = L.circle([14.682138, 121.059137], {
+                color: '#16A34A',
+                fillColor: '#22C55E',
+                fillOpacity: 0.12,
+                radius: 1100,
+                weight: 2
+            }).bindPopup(`
+                <div class="custom-popup">
+                    <h3 class="font-bold text-green-600">Barangay Pasong Tamo Coverage</h3>
+                    <p class="text-sm mt-2">Approximate geographic extent of Barangay Pasong Tamo, Quezon City.</p>
+                    <p class="text-xs text-gray-600 mt-1">Use this overlay to understand which areas fall under barangay response.</p>
+                </div>
+            `);
+
+            barangayCoverageLayer = L.layerGroup([coverageCircle]).addTo(map);
+        }
         
         function setupEventListeners() {
             // Alert close button
@@ -758,74 +994,137 @@
             document.getElementById('toggle-street').addEventListener('click', () => toggleMapView('street'));
             document.getElementById('toggle-terrain').addEventListener('click', () => toggleMapView('terrain'));
             
-            // Layer toggles
-            let floodVisible = true;
+            // Header layer toggles (keep buttons but wire to shared layer state)
+            let floodVisible = layerStates.flood;
             document.getElementById('toggle-flood').addEventListener('click', function() {
                 floodVisible = !floodVisible;
-                floodVisible ? floodLayer.addTo(map) : map.removeLayer(floodLayer);
+                setLayerState('flood', floodVisible);
                 updateButtonState(this, floodVisible, 'blue');
             });
             
-            let safeVisible = true;
+            let safeVisible = layerStates.safe;
             document.getElementById('toggle-safe').addEventListener('click', function() {
                 safeVisible = !safeVisible;
-                safeVisible ? safeLayer.addTo(map) : map.removeLayer(safeLayer);
+                setLayerState('safe', safeVisible);
                 updateButtonState(this, safeVisible, 'green');
             });
             
-            let evacuationVisible = true;
+            let evacuationVisible = layerStates.evacCenters;
             document.getElementById('toggle-evacuation').addEventListener('click', function() {
                 evacuationVisible = !evacuationVisible;
-                evacuationVisible ? evacuationLayer.addTo(map) : map.removeLayer(evacuationLayer);
+                setLayerState('evacCenters', evacuationVisible);
                 updateButtonState(this, evacuationVisible, 'purple');
             });
             
             // Find my location
             document.getElementById('find-me').addEventListener('click', findMyLocation);
             
-            // Search functionality
+            // Optional search functionality (only if search UI exists)
             const searchInput = document.getElementById('search-input');
             const searchResults = document.getElementById('search-results');
             
-            searchInput.addEventListener('input', function(e) {
-                const query = e.target.value.toLowerCase();
-                if (query.length < 2) {
-                    searchResults.classList.add('hidden');
-                    return;
-                }
+            if (searchInput && searchResults) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.toLowerCase();
+                    if (query.length < 2) {
+                        searchResults.classList.add('hidden');
+                        return;
+                    }
+                    
+                    const results = evacuationCenters.filter(center => 
+                        center.name.toLowerCase().includes(query)
+                    );
+                    
+                    if (results.length > 0) {
+                        searchResults.innerHTML = results.map(center => `
+                            <div class="p-3 border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                                 onclick="focusOnLocation(${center.lat}, ${center.lng}, '${center.name.replace(/'/g, "\\'")}')">
+                                <div class="font-medium">${center.name}</div>
+                                <div class="text-sm text-gray-600">Evacuation Center</div>
+                            </div>
+                        `).join('');
+                        searchResults.classList.remove('hidden');
+                    } else {
+                        searchResults.innerHTML = '<div class="p-3 text-gray-600">No results found</div>';
+                        searchResults.classList.remove('hidden');
+                    }
+                });
                 
-                const results = evacuationCenters.filter(center => 
-                    center.name.toLowerCase().includes(query)
-                );
+                // Close search results when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!searchResults.contains(e.target) && !searchInput.contains(e.target)) {
+                        searchResults.classList.add('hidden');
+                    }
+                });
                 
-                if (results.length > 0) {
-                    searchResults.innerHTML = results.map(center => `
-                        <div class="p-3 border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
-                             onclick="focusOnLocation(${center.lat}, ${center.lng}, '${center.name.replace(/'/g, "\\'")}')">
-                            <div class="font-medium">${center.name}</div>
-                            <div class="text-sm text-gray-600">Evacuation Center</div>
-                        </div>
-                    `).join('');
-                    searchResults.classList.remove('hidden');
-                } else {
-                    searchResults.innerHTML = '<div class="p-3 text-gray-600">No results found</div>';
-                    searchResults.classList.remove('hidden');
-                }
+                // Close search on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        searchResults.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Legend toggles
+            const legendItems = document.querySelectorAll('.legend-toggle');
+            legendItems.forEach(item => {
+                const layerKey = item.getAttribute('data-layer');
+                item.addEventListener('click', () => {
+                    const newValue = !layerStates[layerKey];
+                    setLayerState(layerKey, newValue);
+                });
             });
-            
-            // Close search results when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!searchResults.contains(e.target) && !searchInput.contains(e.target)) {
-                    searchResults.classList.add('hidden');
+        }
+
+        function setLayerState(layerKey, isVisible) {
+            layerStates[layerKey] = isVisible;
+
+            switch (layerKey) {
+                case 'flood':
+                    if (floodLayer) {
+                        isVisible ? floodLayer.addTo(map) : map.removeLayer(floodLayer);
+                    }
+                    break;
+                case 'safe':
+                    if (safeLayer) {
+                        isVisible ? safeLayer.addTo(map) : map.removeLayer(safeLayer);
+                    }
+                    if (barangayCoverageLayer) {
+                        isVisible ? barangayCoverageLayer.addTo(map) : map.removeLayer(barangayCoverageLayer);
+                    }
+                    break;
+                case 'elevated':
+                    if (elevatedLayer) {
+                        isVisible ? elevatedLayer.addTo(map) : map.removeLayer(elevatedLayer);
+                    }
+                    break;
+                case 'user':
+                    updateUserLayerVisibility();
+                    break;
+                default:
+                    // Marker-based logical layers (schools, evac centers, government, barangay halls)
+                    updateCenterMarkersVisibility();
+            }
+
+            updateLegendVisual(layerKey, isVisible);
+        }
+
+        function updateLegendVisual(layerKey, isVisible) {
+            const legendItem = document.querySelector(`.legend-toggle[data-layer="${layerKey}"]`);
+            if (!legendItem) return;
+
+            const statusEl = legendItem.querySelector('.legend-status');
+            if (isVisible) {
+                legendItem.classList.remove('inactive');
+                if (statusEl) {
+                    statusEl.textContent = 'On';
                 }
-            });
-            
-            // Close search on escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    searchResults.classList.add('hidden');
+            } else {
+                legendItem.classList.add('inactive');
+                if (statusEl) {
+                    statusEl.textContent = 'Off';
                 }
-            });
+            }
         }
         
         function setupFullscreen() {
@@ -934,12 +1233,20 @@
                     const lng = position.coords.longitude;
                     userLocation = { lat, lng };
                     
+                    // Ensure user layer exists
+                    if (!userLayer) {
+                        userLayer = L.layerGroup();
+                        if (layerStates.user) {
+                            userLayer.addTo(map);
+                        }
+                    }
+
                     // Remove previous user marker
-                    if (userMarker) {
-                        map.removeLayer(userMarker);
+                    if (userMarker && userLayer) {
+                        userLayer.removeLayer(userMarker);
                     }
                     
-                    // Add new user marker with animation
+                    // Add new user marker with animation to the user layer
                     userMarker = L.marker([lat, lng], {
                         icon: L.divIcon({
                             html: '<div class="user-marker bg-blue-600 rounded-full p-3 shadow-lg"><i class="fas fa-user text-white text-xl"></i></div>',
@@ -947,9 +1254,13 @@
                             iconSize: [40, 40],
                             iconAnchor: [20, 40]
                         })
-                    }).addTo(map)
-                    .bindPopup('<div class="custom-popup"><h3 class="font-bold text-blue-600">Your Location</h3><p class="text-sm">You are here</p></div>')
-                    .openPopup();
+                    }).bindPopup('<div class="custom-popup"><h3 class="font-bold text-blue-600">Your Location</h3><p class="text-sm">You are here</p></div>');
+
+                    if (layerStates.user && userLayer) {
+                        userLayer.addLayer(userMarker);
+                    }
+
+                    userMarker.openPopup();
                     
                     // Center map on user
                     map.setView([lat, lng], 16);
@@ -1013,9 +1324,17 @@
         function drawRouteToNearestCenter() {
             if (!userLocation) return;
             
-            // Clear existing routes
-            if (routeLayer) {
-                map.removeLayer(routeLayer);
+            // Ensure user layer exists
+            if (!userLayer) {
+                userLayer = L.layerGroup();
+                if (layerStates.user) {
+                    userLayer.addTo(map);
+                }
+            }
+
+            // Clear existing routes from user layer
+            if (routeLayer && userLayer) {
+                userLayer.removeLayer(routeLayer);
             }
             
             const nearest = findNearestCenter(userLocation);
@@ -1030,10 +1349,12 @@
                 weight: 4,
                 opacity: 0.7,
                 dashArray: '10, 10'
-            }).addTo(map);
-            
+            });
+
             routeLayer = L.layerGroup([route]);
-            routeLayer.addTo(map);
+            if (layerStates.user && userLayer) {
+                userLayer.addLayer(routeLayer);
+            }
             
             // Show the route button as active
             document.getElementById('toggle-evacuation').classList.remove('bg-purple-100', 'text-purple-800');
@@ -1047,8 +1368,15 @@
             }
             
             // For demonstration, we'll just draw a line and show info
-            if (routeLayer) {
-                map.removeLayer(routeLayer);
+            if (!userLayer) {
+                userLayer = L.layerGroup();
+                if (layerStates.user) {
+                    userLayer.addTo(map);
+                }
+            }
+
+            if (routeLayer && userLayer) {
+                userLayer.removeLayer(routeLayer);
             }
             
             const route = L.polyline([
@@ -1058,10 +1386,12 @@
                 color: '#10B981',
                 weight: 5,
                 opacity: 0.7
-            }).addTo(map);
-            
+            });
+
             routeLayer = L.layerGroup([route]);
-            routeLayer.addTo(map);
+            if (layerStates.user && userLayer) {
+                userLayer.addLayer(routeLayer);
+            }
             
             // Center map on route
             const bounds = L.latLngBounds([
@@ -1110,5 +1440,20 @@
             .animate-fade-out { animation: fade-out 0.3s ease-out; }
         `;
         document.head.appendChild(style);
+
+        function updateUserLayerVisibility() {
+            if (!userLayer) {
+                // Nothing to toggle yet
+                return;
+            }
+
+            if (layerStates.user) {
+                if (!map.hasLayer(userLayer)) {
+                    userLayer.addTo(map);
+                }
+            } else if (map.hasLayer(userLayer)) {
+                map.removeLayer(userLayer);
+            }
+        }
     </script>
 @endsection
