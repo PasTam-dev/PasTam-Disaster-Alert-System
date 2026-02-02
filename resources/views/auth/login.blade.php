@@ -188,14 +188,14 @@
         <form method="POST" action="{{ route('authenticate') }}" class="space-y-6">
           @csrf
 
-          <!-- Email -->
+          <!-- Email / Username -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address or Admin Username</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i class="fas fa-envelope text-gray-400"></i>
               </div>
-              <input id="email" name="email" type="email" placeholder="Enter your email" required
+              <input id="email" name="email" type="text" placeholder="Enter your email or type &quot;admin&quot;" required
                 value="{{ old('email') }}"
                 class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary-light focus:border-transparent input-transition outline-none bg-gray-50" />
             </div>
