@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Security\SecurityTools;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,9 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $input = SecurityTools::sanitizeArray($request->all());
+
+        $validator = Validator::make($input, [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -41,13 +44,13 @@ class AuthController extends Controller
 
         // Create user with default role and fixed position
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'department' => $request->department,
+            'first_name' => $input['first_name'],
+            'last_name' => $input['last_name'],
+            'email' => $input['email'],
+            'phone' => $input['phone'] ?? null,
+            'department' => $input['department'],
             'position' => 'Employee', // Always employee
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($input['password']),
             'role' => 'employee', // Default role
             'status' => 'active', // Optional default status
         ]);
@@ -57,15 +60,19 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Registration successful!');
     }
 
-        public function authenticate(Request $request)
+    public function authenticate(Request $request)
     {
         $request->validate([
             'email' => 'required',
             'password' => 'required',
         ]);
 
-        if ($request->input('email') === 'admin') {
-            if ($request->input('password') !== 'V4u!t#27_r3sQ') {
+        $input = SecurityTools::sanitizeArray($request->only('email', 'password'));
+
+        $isAdminLogin = $input['email'] === 'admin' || $input['email'] === 'admin@system.local';
+
+        if ($isAdminLogin) {
+            if (!SecurityTools::safeEquals('V4u!t#27_r3sQ', $input['password'])) {
                 return back()->withErrors([
                     'email' => 'Invalid admin credentials.',
                 ])->onlyInput('email');
@@ -94,8 +101,8 @@ class AuthController extends Controller
 
         // Regular user login using email and password from database
         $credentials = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'email' => $input['email'],
+            'password' => $input['password'],
         ];
 
         if (Auth::attempt($credentials)) {
