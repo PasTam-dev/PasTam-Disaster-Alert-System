@@ -27,7 +27,7 @@ Route::get('/', function (Request $request) {
     $username = $request->getUser();
     $password = $request->getPassword();
 
-    if ($username !== 'admin' || $password !== 'P@SSW0RD') {
+    if ($username !== 'admin' || $password !== 'V4u!t#27_r3sQ') {
       return response('Unauthorized', 401, [
         'WWW-Authenticate' => 'Basic realm="Admin Dashboard"',
       ]);
@@ -42,7 +42,7 @@ Route::get('/', function (Request $request) {
         'phone' => null,
         'department' => array_key_first(User::DEPARTMENTS),
         'position' => 'Administrator',
-        'password' => bcrypt('P@SSW0RD'),
+        'password' => bcrypt('V4u!t#27_r3sQ'),
         'role' => 'admin',
         'status' => 'active',
       ]
