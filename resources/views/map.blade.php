@@ -168,8 +168,14 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0 flex items-center">
                     <i class="fas fa-map-marked-alt text-blue-500 mr-2"></i> Interactive Evacuation Map
                 </h2>
+                <div class="flex gap-2">
+                    <button type="button"
+                            onclick="openMiniMapForUser()"
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm flex items-center justify-center">
+                        <i class="fas fa-location-dot mr-2"></i> Find My Location
+                    </button>
+                </div>
             </div>
-                <!-- pinalitan ko dito ng hazard hunter pagpatuloy ko mamaya -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="p-4 border-b">
                     <p class="text-sm text-gray-700">
@@ -234,14 +240,14 @@
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="focusHazardCenter('pasong-tamo-elementary')"
+                                onclick="openMiniMap(14.67398,121.04673,'Pasong Tamo Elementary School')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="focusHazardCenter('pasong-tamo-elementary')"
+                                onclick="openMiniMap(14.67398,121.04673,'Pasong Tamo Elementary School')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-directions mr-2"></i> Directions (Hazard Map)
+                            <i class="fas fa-directions mr-2"></i> Directions
                         </button>
                     </div>
                 </div>
@@ -286,14 +292,14 @@
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="focusHazardCenter('barangay-hall')"
+                                onclick="openMiniMap(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="focusHazardCenter('barangay-hall')"
+                                onclick="openMiniMap(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-directions mr-2"></i> Directions (Hazard Map)
+                            <i class="fas fa-directions mr-2"></i> Directions
                         </button>
                     </div>
                 </div>
@@ -338,14 +344,14 @@
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="focusHazardCenter('community-center')"
+                                onclick="openMiniMap(14.67610,121.04980,'Community Center')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="focusHazardCenter('community-center')"
+                                onclick="openMiniMap(14.67610,121.04980,'Community Center')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-directions mr-2"></i> Directions (Hazard Map)
+                            <i class="fas fa-directions mr-2"></i> Directions
                         </button>
                     </div>
                 </div>
@@ -427,6 +433,19 @@
             </div>
         </section>
 
+        <!-- Mini Google Map Modal -->
+        <div id="mini-map-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-xl">
+                <div class="flex items-center justify-between px-4 py-2 border-b">
+                    <h3 id="mini-map-title" class="text-lg font-semibold text-gray-800">Location</h3>
+                    <button type="button" onclick="closeMiniMap()" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
+                </div>
+                <div class="w-full h-80">
+                    <iframe id="mini-map-frame" class="w-full h-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
@@ -445,28 +464,45 @@
                     alertBanner.classList.add('hidden');
                 });
             }
-
-            
-            window.focusHazardCenter = function (key) {
-                const mapSection = document.getElementById('map-section');
-                if (mapSection) {
-                    mapSection.scrollIntoView({ behavior: 'smooth' });
-                }
-
-                
-                let message = '';
-                if (key === 'pasong-tamo-elementary') {
-                    message = 'Pasong Tamo Elementary School — approx. coordinates 14.67398, 121.04673. In the HazardHunter map, use the "Long-Lat Coordinates" tool and enter these values near Pasong Tamo, Quezon City.';
-                } else if (key === 'barangay-hall') {
-                    message = 'Pasong Tamo Barangay Hall — approx. coordinates 14.6747884, 121.0476176. In the HazardHunter map, use the "Long-Lat Coordinates" tool with these values.';
-                } else if (key === 'community-center') {
-                    message = 'Community Center — approx. coordinates 14.67610, 121.04980 within Pasong Tamo, Quezon City. Use these in the HazardHunter "Long-Lat Coordinates" tool.';
-                }
-
-                if (message) {
-                    alert(message);
-                }
-            };
         });
+
+        function openMiniMap(lat, lng, title) {
+            const modal = document.getElementById('mini-map-modal');
+            const frame = document.getElementById('mini-map-frame');
+            const titleEl = document.getElementById('mini-map-title');
+            if (!modal || !frame) return;
+            const url = 'https://www.google.com/maps?q=' + lat + ',' + lng + '&z=17&output=embed';
+            frame.src = url;
+            if (titleEl && title) {
+                titleEl.textContent = title;
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeMiniMap() {
+            const modal = document.getElementById('mini-map-modal');
+            const frame = document.getElementById('mini-map-frame');
+            if (!modal || !frame) return;
+            modal.classList.add('hidden');
+            frame.src = '';
+        }
+
+        function openMiniMapForUser() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    openMiniMap(lat, lng, 'Your Location');
+                },
+                function () {
+                    alert('Unable to get your location. Please check your browser settings.');
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
     </script>
 @endsection
