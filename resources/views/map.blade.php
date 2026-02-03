@@ -289,8 +289,8 @@
                             <i class="fas fa-building text-green-600 text-2xl"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-gray-800">Barangay Hall</h3>
-                            <p class="text-gray-600">Emergency Operations Center</p>
+                            <h3 class="text-xl font-bold text-gray-800">Pasong Tamo Barangay Hall</h3>
+                            <p class="text-gray-600">Official barangay hall / community governance center</p>
                         </div>
                     </div>
                     
@@ -310,24 +310,24 @@
                         </div>
                         
                         <div class="flex items-center">
-                            <i class="fas fa-phone-alt text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">Emergency communications</span>
+                            <i class="fas fa-briefcase text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">Administrative offices</span>
                         </div>
                         
                         <div class="flex items-center">
-                            <i class="fas fa-first-aid text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">Medical station</span>
+                            <i class="fas fa-door-open text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">Meeting rooms</span>
                         </div>
                     </div>
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="focusEvacCenter(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
+                                onclick="focusEvacCenter(14.6747888,121.0482474,'Pasong Tamo Barangay Hall')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="routeToEvacCenter(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
+                                onclick="routeToEvacCenter(14.6747888,121.0482474,'Pasong Tamo Barangay Hall')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -342,7 +342,7 @@
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Community Center</h3>
-                            <p class="text-gray-600">Multi-purpose Facility</p>
+                            <p class="text-gray-600">Event and activity venue</p>
                         </div>
                     </div>
                     
@@ -362,24 +362,29 @@
                         </div>
                         
                         <div class="flex items-center">
-                            <i class="fas fa-child text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">Family-friendly space</span>
+                            <i class="fas fa-door-open text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">Event space</span>
                         </div>
-                        
+
                         <div class="flex items-center">
-                            <i class="fas fa-wheelchair text-gray-400 mr-3"></i>
-                            <span class="text-gray-700">Accessible facility</span>
+                            <i class="fas fa-users text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">Small gathering areas</span>
+                        </div>
+
+                        <div class="flex items-center">
+                            <i class="fas fa-chalkboard-teacher text-gray-400 mr-3"></i>
+                            <span class="text-gray-700">Activity rooms</span>
                         </div>
                     </div>
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="focusEvacCenter(14.67610,121.04980,'Community Center')"
+                                onclick="focusEvacCenter(14.67288,121.06168,'Community Center')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="routeToEvacCenter(14.67610,121.04980,'Community Center')"
+                                onclick="routeToEvacCenter(14.67288,121.06168,'Community Center')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -508,8 +513,8 @@
 
             const centers = [
                 { key: 'elementary', lat: 14.67398, lng: 121.04673, title: 'Pasong Tamo Elementary School' },
-                { key: 'barangay', lat: 14.6747884, lng: 121.0476176, title: 'Pasong Tamo Barangay Hall' },
-                { key: 'community', lat: 14.67610, lng: 121.04980, title: 'Community Center' }
+                { key: 'barangay', lat: 14.6747888, lng: 121.0482474, title: 'Pasong Tamo Barangay Hall' },
+                { key: 'community', lat: 14.67288, lng: 121.06168, title: 'Community Center' }
             ];
 
             centers.forEach(function (c) {
