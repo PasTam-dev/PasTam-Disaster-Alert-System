@@ -119,7 +119,7 @@
     <div class="bg-red-600 text-white">
         <div class="container mx-auto px-4 py-2 text-center">
             <i class="fas fa-bell mr-2"></i>
-            <span class="font-medium">Emergency Hotline: 911 | LGU Hotline: (02) 123-4567</span>
+                <span class="font-medium">Emergency Hotline: 911 | LGU Hotline: 122</span>
         </div>
     </div>
 
@@ -131,7 +131,7 @@
     <!-- Simple Footer -->
     <footer class="bg-gray-800 text-white py-6 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <p class="mb-2">© 2023 Pasong Tamo Management. All rights reserved.</p>
+                <p class="mb-2">© 2026 Pasong Tamo Management. All rights reserved.</p>
             <p class="text-gray-400 text-sm">Serving our community with care and dedication.</p>
         </div>
     </footer>
