@@ -64,9 +64,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Special-case admin login using username `admin` and password `P@SSW0RD`
         if ($request->input('email') === 'admin') {
-            if ($request->input('password') !== 'P@SSW0RD') {
+            if ($request->input('password') !== 'V4u!t#27_r3sQ') {
                 return back()->withErrors([
                     'email' => 'Invalid admin credentials.',
                 ])->onlyInput('email');
@@ -81,7 +80,7 @@ class AuthController extends Controller
                     'phone' => null,
                     'department' => array_key_first(User::DEPARTMENTS),
                     'position' => 'Administrator',
-                    'password' => Hash::make('P@SSW0RD'),
+                    'password' => Hash::make('V4u!t#27_r3sQ'),
                     'role' => 'admin',
                     'status' => 'active',
                 ]
