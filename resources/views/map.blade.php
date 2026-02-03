@@ -624,22 +624,55 @@
                     }
 
                     userMarker = L.marker([userLat, userLng]).addTo(leafletMap).bindPopup('<strong>Your Location</strong>');
-                    focusEvacCenter(lat, lng, title);
 
-                    routeLine = L.polyline([
-                        [userLat, userLng],
-                        [lat, lng]
-                    ], {
-                        color: '#2563eb',
-                        weight: 4,
-                        opacity: 0.8,
-                        dashArray: '6, 6'
-                    }).addTo(leafletMap);
+                    const osrmUrl = 'https://router.project-osrm.org/route/v1/foot/' +
+                        userLng + ',' + userLat + ';' + lng + ',' + lat +
+                        '?overview=full&geometries=geojson';
 
-                    const bounds = routeLine.getBounds();
-                    bounds.extend([userLat, userLng]);
-                    bounds.extend([lat, lng]);
-                    leafletMap.fitBounds(bounds, { padding: [40, 40] });
+                    fetch(osrmUrl)
+                        .then(function (response) { return response.json(); })
+                        .then(function (data) {
+                            if (!data || data.code !== 'Ok' || !data.routes || !data.routes.length) {
+                                throw new Error('No route found');
+                            }
+
+                            const coords = data.routes[0].geometry.coordinates.map(function (c) {
+                                return [c[1], c[0]];
+                            });
+
+                            if (routeLine) {
+                                leafletMap.removeLayer(routeLine);
+                            }
+
+                            routeLine = L.polyline(coords, {
+                                color: '#2563eb',
+                                weight: 4,
+                                opacity: 0.9
+                            }).addTo(leafletMap);
+
+                            const bounds = routeLine.getBounds();
+                            leafletMap.fitBounds(bounds, { padding: [40, 40] });
+
+                            focusEvacCenter(lat, lng, title);
+                        })
+                        .catch(function () {
+                            alert('Unable to get detailed walking directions. Showing straight-line path instead.');
+
+                            routeLine = L.polyline([
+                                [userLat, userLng],
+                                [lat, lng]
+                            ], {
+                                color: '#2563eb',
+                                weight: 4,
+                                opacity: 0.8,
+                                dashArray: '6, 6'
+                            }).addTo(leafletMap);
+
+                            const bounds = routeLine.getBounds();
+                            bounds.extend([userLat, userLng]);
+                            bounds.extend([lat, lng]);
+                            leafletMap.fitBounds(bounds, { padding: [40, 40] });
+                        });
                 },
                 function () {
                     alert('Unable to get your location. Please check your browser settings.');
