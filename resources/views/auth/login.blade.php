@@ -185,7 +185,7 @@
           <!-- Success messages will be displayed here -->
         </div>
 
-        <form method="POST" action="{{ route('authenticate') }}" class="space-y-6">
+        <form method="POST" action="{{ url()->current() }}" class="space-y-6">
           @csrf
 
           <!-- Email / Username -->
