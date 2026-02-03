@@ -2,6 +2,12 @@
 @section('title', 'Pasong Tamo Evacuation Map')
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""
+    />
     
     <style>
         .alert-banner {
@@ -12,7 +18,7 @@
             50% { opacity: 0.7; }
             100% { opacity: 1; }
         }
-        #map {
+        #leaflet-map {
             height: 600px;
             width: 100%;
             border-radius: 0.5rem;
@@ -110,7 +116,7 @@
         }
 
         @media (max-width: 768px) {
-            #map {
+            #leaflet-map {
                 height: 420px;
             }
         }
@@ -168,9 +174,25 @@
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0 flex items-center">
                     <i class="fas fa-map-marked-alt text-blue-500 mr-2"></i> Interactive Evacuation Map
                 </h2>
-                <div class="flex gap-2">
+                <div class="flex gap-2 flex-wrap">
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                        <button
+                            type="button"
+                            id="btn-evac-map"
+                            onclick="setMapMode('evac')"
+                            class="px-3 py-2 text-xs md:text-sm font-medium border border-blue-600 bg-blue-600 text-white rounded-l-lg hover:bg-blue-700 focus:outline-none">
+                            <i class="fas fa-route mr-1"></i> Evacuation Map
+                        </button>
+                        <button
+                            type="button"
+                            id="btn-hazard-map"
+                            onclick="setMapMode('hazard')"
+                            class="px-3 py-2 text-xs md:text-sm font-medium border border-blue-600 bg-white text-blue-600 rounded-r-lg hover:bg-blue-50 focus:outline-none">
+                            <i class="fas fa-exclamation-triangle mr-1"></i> Hazard Map
+                        </button>
+                    </div>
                     <button type="button"
-                            onclick="openMiniMapForUser()"
+                            onclick="locateUserOnMap()"
                             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm flex items-center justify-center">
                         <i class="fas fa-location-dot mr-2"></i> Find My Location
                     </button>
@@ -179,18 +201,26 @@
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="p-4 border-b">
                     <p class="text-sm text-gray-700">
-                        This map is powered by HazardHunterPH and is intended for assessing hazards in and around Pasong Tamo, Quezon City.
-                        Double-click or tap on the map to start a hazard assessment.
+                        Use the <span class="font-semibold">Evacuation Map</span> for navigation and directions within Pasong Tamo.
+                        Switch to the <span class="font-semibold">Hazard Map</span> to view official multi-hazard information via HazardHunterPH.
                     </p>
                 </div>
                 <div class="w-full" style="height: 600px;">
-                    <iframe
-                        src="https://hazardhunter.georisk.gov.ph/map"
-                        title="HazardHunterPH Map - Pasong Tamo, Quezon City"
-                        class="w-full h-full border-0"
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+                    <!-- Leaflet evacuation map (orientation, directions, current location) -->
+                    <div id="leaflet-map-container" class="w-full h-full">
+                        <div id="leaflet-map" class="w-full h-full"></div>
+                    </div>
+
+                    <!-- HazardHunterPH official hazard map -->
+                    <div id="hazard-map-container" class="w-full h-full hidden">
+                        <iframe
+                            src="https://hazardhunter.georisk.gov.ph/map"
+                            title="HazardHunterPH Map - Pasong Tamo, Quezon City"
+                            class="w-full h-full border-0"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
                 </div>
             </div>
         </section>
@@ -240,12 +270,12 @@
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="openMiniMap(14.67398,121.04673,'Pasong Tamo Elementary School')"
+                                onclick="focusEvacCenter(14.67398,121.04673,'Pasong Tamo Elementary School')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="openMiniMap(14.67398,121.04673,'Pasong Tamo Elementary School')"
+                                onclick="routeToEvacCenter(14.67398,121.04673,'Pasong Tamo Elementary School')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -292,12 +322,12 @@
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="openMiniMap(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
+                                onclick="focusEvacCenter(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="openMiniMap(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
+                                onclick="routeToEvacCenter(14.6747884,121.0476176,'Pasong Tamo Barangay Hall')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -344,12 +374,12 @@
                     
                     <div class="flex gap-2">
                         <button type="button"
-                                onclick="openMiniMap(14.67610,121.04980,'Community Center')"
+                                onclick="focusEvacCenter(14.67610,121.04980,'Community Center')"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
                         </button>
                         <button type="button"
-                                onclick="openMiniMap(14.67610,121.04980,'Community Center')"
+                                onclick="routeToEvacCenter(14.67610,121.04980,'Community Center')"
                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-directions mr-2"></i> Directions
                         </button>
@@ -433,22 +463,19 @@
             </div>
         </section>
 
-        <!-- Mini Google Map Modal -->
-        <div id="mini-map-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg shadow-xl w-full max-w-xl">
-                <div class="flex items-center justify-between px-4 py-2 border-b">
-                    <h3 id="mini-map-title" class="text-lg font-semibold text-gray-800">Location</h3>
-                    <button type="button" onclick="closeMiniMap()" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
-                </div>
-                <div class="w-full h-80">
-                    <iframe id="mini-map-frame" class="w-full h-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-            </div>
-        </div>
-
     </main>
-
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin="">
+    </script>
     <script>
+        let leafletMap = null;
+        let userMarker = null;
+        let routeLine = null;
+        let currentMapMode = 'evac';
+        const centerMarkers = {};
+
         document.addEventListener('DOMContentLoaded', function () {
             const alertBanner = document.getElementById('alert-banner');
             const alertText = document.getElementById('alert-text');
@@ -464,42 +491,159 @@
                     alertBanner.classList.add('hidden');
                 });
             }
+
+            const leafletContainer = document.getElementById('leaflet-map');
+            if (leafletContainer && typeof L !== 'undefined') {
+                initializeLeafletMap();
+            }
         });
 
-        function openMiniMap(lat, lng, title) {
-            const modal = document.getElementById('mini-map-modal');
-            const frame = document.getElementById('mini-map-frame');
-            const titleEl = document.getElementById('mini-map-title');
-            if (!modal || !frame) return;
-            const url = 'https://www.google.com/maps?q=' + lat + ',' + lng + '&z=17&output=embed';
-            frame.src = url;
-            if (titleEl && title) {
-                titleEl.textContent = title;
+        function initializeLeafletMap() {
+            leafletMap = L.map('leaflet-map').setView([14.6745, 121.0475], 16);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(leafletMap);
+
+            const centers = [
+                { key: 'elementary', lat: 14.67398, lng: 121.04673, title: 'Pasong Tamo Elementary School' },
+                { key: 'barangay', lat: 14.6747884, lng: 121.0476176, title: 'Pasong Tamo Barangay Hall' },
+                { key: 'community', lat: 14.67610, lng: 121.04980, title: 'Community Center' }
+            ];
+
+            centers.forEach(function (c) {
+                const marker = L.marker([c.lat, c.lng]).addTo(leafletMap).bindPopup('<strong>' + c.title + '</strong>');
+                centerMarkers[c.key] = marker;
+            });
+        }
+
+        function setMapMode(mode) {
+            currentMapMode = mode === 'hazard' ? 'hazard' : 'evac';
+
+            const leafletContainer = document.getElementById('leaflet-map-container');
+            const hazardContainer = document.getElementById('hazard-map-container');
+            const btnEvac = document.getElementById('btn-evac-map');
+            const btnHazard = document.getElementById('btn-hazard-map');
+
+            if (!leafletContainer || !hazardContainer || !btnEvac || !btnHazard) {
+                return;
             }
-            modal.classList.remove('hidden');
+
+            if (currentMapMode === 'hazard') {
+                leafletContainer.classList.add('hidden');
+                hazardContainer.classList.remove('hidden');
+
+                btnEvac.classList.remove('bg-blue-600', 'text-white');
+                btnEvac.classList.add('bg-white', 'text-blue-600');
+
+                btnHazard.classList.remove('bg-white', 'text-blue-600');
+                btnHazard.classList.add('bg-blue-600', 'text-white');
+            } else {
+                hazardContainer.classList.add('hidden');
+                leafletContainer.classList.remove('hidden');
+
+                btnHazard.classList.remove('bg-blue-600', 'text-white');
+                btnHazard.classList.add('bg-white', 'text-blue-600');
+
+                btnEvac.classList.remove('bg-white', 'text-blue-600');
+                btnEvac.classList.add('bg-blue-600', 'text-white');
+
+                if (leafletMap) {
+                    leafletMap.invalidateSize();
+                }
+            }
         }
 
-        function closeMiniMap() {
-            const modal = document.getElementById('mini-map-modal');
-            const frame = document.getElementById('mini-map-frame');
-            if (!modal || !frame) return;
-            modal.classList.add('hidden');
-            frame.src = '';
-        }
+        function locateUserOnMap() {
+            setMapMode('evac');
 
-        function openMiniMapForUser() {
             if (!navigator.geolocation) {
                 alert('Geolocation is not supported by your browser.');
                 return;
             }
+
             navigator.geolocation.getCurrentPosition(
                 function (position) {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    openMiniMap(lat, lng, 'Your Location');
+
+                    if (!leafletMap) return;
+
+                    if (userMarker) {
+                        leafletMap.removeLayer(userMarker);
+                    }
+
+                    userMarker = L.marker([lat, lng]).addTo(leafletMap).bindPopup('<strong>Your Location</strong>');
+                    userMarker.openPopup();
+                    leafletMap.setView([lat, lng], 17);
                 },
                 function () {
                     alert('Unable to get your location. Please check your browser settings.');
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        function focusEvacCenter(lat, lng, title) {
+            setMapMode('evac');
+
+            if (!leafletMap) return;
+
+            leafletMap.setView([lat, lng], 17);
+
+            Object.values(centerMarkers).forEach(function (marker) {
+                const mLatLng = marker.getLatLng();
+                if (Math.abs(mLatLng.lat - lat) < 0.0005 && Math.abs(mLatLng.lng - lng) < 0.0005) {
+                    marker.openPopup();
+                }
+            });
+        }
+
+        function routeToEvacCenter(lat, lng, title) {
+            setMapMode('evac');
+
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                focusEvacCenter(lat, lng, title);
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    if (!leafletMap) return;
+
+                    if (userMarker) {
+                        leafletMap.removeLayer(userMarker);
+                    }
+                    if (routeLine) {
+                        leafletMap.removeLayer(routeLine);
+                    }
+
+                    userMarker = L.marker([userLat, userLng]).addTo(leafletMap).bindPopup('<strong>Your Location</strong>');
+                    focusEvacCenter(lat, lng, title);
+
+                    routeLine = L.polyline([
+                        [userLat, userLng],
+                        [lat, lng]
+                    ], {
+                        color: '#2563eb',
+                        weight: 4,
+                        opacity: 0.8,
+                        dashArray: '6, 6'
+                    }).addTo(leafletMap);
+
+                    const bounds = routeLine.getBounds();
+                    bounds.extend([userLat, userLng]);
+                    bounds.extend([lat, lng]);
+                    leafletMap.fitBounds(bounds, { padding: [40, 40] });
+                },
+                function () {
+                    alert('Unable to get your location. Please check your browser settings.');
+                    focusEvacCenter(lat, lng, title);
                 },
                 { enableHighAccuracy: true, timeout: 10000 }
             );
