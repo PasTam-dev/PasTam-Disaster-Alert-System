@@ -20,6 +20,14 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+        .contact-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: contain;
+            background-color: rgba(255,255,255,0.95);
+            padding: 6px;
+        }
         .urgent-red {
             background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
             color: white;
@@ -152,7 +160,7 @@
                 <div class="emergency-card urgent-red p-6">
                     <div class="flex items-start mb-4">
                         <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                            <i class="fas fa-exclamation-triangle text-2xl"></i>
+                            <img src="{{ asset('images/for_logo/911.jpeg') }}" alt="National Emergency Hotline" class="contact-logo">
                         </div>
                         <div class="flex-1">
                             <h3 class="text-xl font-bold">National Emergency Hotline</h3>
@@ -179,7 +187,7 @@
                 <div class="emergency-card police-dark p-6">
                     <div class="flex items-start mb-4">
                         <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                            <i class="fas fa-shield-alt text-2xl"></i>
+                            <img src="{{ asset('images/for_logo/pnp.png') }}" alt="Philippine National Police" class="contact-logo">
                         </div>
                         <div class="flex-1">
                             <h3 class="text-xl font-bold">Philippine National Police (PNP)</h3>
@@ -206,7 +214,7 @@
                 <div class="emergency-card fire-orange p-6">
                     <div class="flex items-start mb-4">
                         <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                            <i class="fas fa-fire-extinguisher text-2xl"></i>
+                            <img src="{{ asset('images/for_logo/bfp.png') }}" alt="Bureau of Fire Protection" class="contact-logo">
                         </div>
                         <div class="flex-1">
                             <h3 class="text-xl font-bold">Bureau of Fire Protection</h3>
@@ -240,7 +248,7 @@
                     <div class="emergency-card hospital-blue p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-plus-circle text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/redcross.png') }}" alt="Philippine Red Cross" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">Philippine Red Cross</h3>
@@ -267,7 +275,7 @@
                     <div class="emergency-card hospital-blue p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-skull-crossbones text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/posioncontrol.jpeg') }}" alt="National Poison Control" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">National Poison Control</h3>
@@ -294,7 +302,7 @@
                     <div class="emergency-card hospital-blue p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-stethoscope text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/doh.jpeg') }}" alt="DOH Health Emergency" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">DOH Health Emergency</h3>
@@ -329,7 +337,7 @@
                     <div class="emergency-card disaster-green p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-hands-helping text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/ndrrmc.jpeg') }}" alt="NDRRMC Operations" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">NDRRMC Operations</h3>
@@ -356,7 +364,7 @@
                     <div class="emergency-card disaster-green p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-ship text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/coastguard.png') }}" alt="Philippine Coast Guard" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">Philippine Coast Guard</h3>
@@ -383,7 +391,7 @@
                     <div class="emergency-card disaster-green p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-car-crash text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/mmda.jpeg') }}" alt="MMDA Road Emergency" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">MMDA Road Emergency</h3>
@@ -418,7 +426,7 @@
                     <div class="emergency-card utility-purple p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-bolt text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/meralco.png') }}" alt="Meralco Power Emergency" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">Meralco Power Emergency</h3>
@@ -445,7 +453,7 @@
                     <div class="emergency-card utility-purple p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-faucet text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/maynilad.jpeg') }}" alt="Maynilad Water Service" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">Maynilad Water Service</h3>
@@ -472,7 +480,7 @@
                     <div class="emergency-card utility-purple p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-phone-alt text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/pldt.png') }}" alt="PLDT Landline Emergency" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">PLDT Landline Emergency</h3>
@@ -507,7 +515,7 @@
                     <div class="emergency-card govt-yellow p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-hands-helping text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/dswd.png') }}" alt="DSWD Crisis Assistance" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">DSWD Crisis Assistance</h3>
@@ -534,7 +542,7 @@
                     <div class="emergency-card govt-yellow p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-shopping-cart text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/dti.png') }}" alt="DTI Consumer Complaints" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">DTI Consumer Complaints</h3>
@@ -561,7 +569,7 @@
                     <div class="emergency-card govt-yellow p-6">
                         <div class="flex items-start mb-4">
                             <div class="bg-white bg-opacity-20 p-3 rounded-lg mr-4">
-                                <i class="fas fa-plane text-2xl"></i>
+                                <img src="{{ asset('images/for_logo/caa.jpeg') }}" alt="Civil Aviation Authority" class="contact-logo">
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold">Civil Aviation Authority</h3>
