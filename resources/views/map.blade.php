@@ -169,7 +169,7 @@
                     <i class="fas fa-map-marked-alt text-blue-500 mr-2"></i> Interactive Evacuation Map
                 </h2>
             </div>
-
+                <!-- pinalitan ko dito ng hazard hunter pagpatuloy ko mamaya -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
                 <div class="p-4 border-b">
                     <p class="text-sm text-gray-700">
@@ -233,16 +233,16 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <a href="https://www.google.com/maps/search/?api=1&query=14.67398,121.04673"
-                           target="_blank" rel="noopener"
-                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
+                        <button type="button"
+                                onclick="focusHazardCenter('pasong-tamo-elementary')"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
-                        </a>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=14.67398,121.04673"
-                           target="_blank" rel="noopener"
-                           class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-directions mr-2"></i> Directions
-                        </a>
+                        </button>
+                        <button type="button"
+                                onclick="focusHazardCenter('pasong-tamo-elementary')"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
+                            <i class="fas fa-directions mr-2"></i> Directions (Hazard Map)
+                        </button>
                     </div>
                 </div>
                 
@@ -285,16 +285,16 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <a href="https://www.google.com/maps/search/?api=1&query=14.6747884,121.0476176"
-                           target="_blank" rel="noopener"
-                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
+                        <button type="button"
+                                onclick="focusHazardCenter('barangay-hall')"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
-                        </a>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=14.6747884,121.0476176"
-                           target="_blank" rel="noopener"
-                           class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-directions mr-2"></i> Directions
-                        </a>
+                        </button>
+                        <button type="button"
+                                onclick="focusHazardCenter('barangay-hall')"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
+                            <i class="fas fa-directions mr-2"></i> Directions (Hazard Map)
+                        </button>
                     </div>
                 </div>
                 
@@ -337,16 +337,16 @@
                     </div>
                     
                     <div class="flex gap-2">
-                        <a href="https://www.google.com/maps/search/?api=1&query=14.67610,121.04980"
-                           target="_blank" rel="noopener"
-                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
+                        <button type="button"
+                                onclick="focusHazardCenter('community-center')"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
                             <i class="fas fa-map-marker-alt mr-2"></i> View on Map
-                        </a>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=14.67610,121.04980"
-                           target="_blank" rel="noopener"
-                           class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-directions mr-2"></i> Directions
-                        </a>
+                        </button>
+                        <button type="button"
+                                onclick="focusHazardCenter('community-center')"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center">
+                            <i class="fas fa-directions mr-2"></i> Directions (Hazard Map)
+                        </button>
                     </div>
                 </div>
             </div>
@@ -445,6 +445,28 @@
                     alertBanner.classList.add('hidden');
                 });
             }
+
+            
+            window.focusHazardCenter = function (key) {
+                const mapSection = document.getElementById('map-section');
+                if (mapSection) {
+                    mapSection.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                
+                let message = '';
+                if (key === 'pasong-tamo-elementary') {
+                    message = 'Pasong Tamo Elementary School — approx. coordinates 14.67398, 121.04673. In the HazardHunter map, use the "Long-Lat Coordinates" tool and enter these values near Pasong Tamo, Quezon City.';
+                } else if (key === 'barangay-hall') {
+                    message = 'Pasong Tamo Barangay Hall — approx. coordinates 14.6747884, 121.0476176. In the HazardHunter map, use the "Long-Lat Coordinates" tool with these values.';
+                } else if (key === 'community-center') {
+                    message = 'Community Center — approx. coordinates 14.67610, 121.04980 within Pasong Tamo, Quezon City. Use these in the HazardHunter "Long-Lat Coordinates" tool.';
+                }
+
+                if (message) {
+                    alert(message);
+                }
+            };
         });
     </script>
 @endsection
